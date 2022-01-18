@@ -100,3 +100,17 @@ if uploaded_file is not None:
             fig,ax=plt.subplots();
             ax.pie(emoji_df[1],labels=emoji_df[0],autopct="%0.2f")
             st.pyplot(fig)
+
+        # bad word used in chat
+        st.title("Bad word used by users")
+        data_of_bad_words = helper.bad_word_used_by_user(selected_user, df)
+        col1, col2 = st.columns(2)
+        with col1:
+            st.dataframe(data_of_bad_words)
+        fig, ax = plt.subplots()
+
+        ax.barh(data_of_bad_words[0], data_of_bad_words[1])
+        plt.xticks(rotation='vertical')
+
+        with col2:
+            st.pyplot(fig)

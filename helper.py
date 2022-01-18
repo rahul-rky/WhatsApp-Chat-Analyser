@@ -96,3 +96,33 @@ def activity_heatmap(selected_user,df):
     user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
 
     return user_heatmap
+
+
+
+def bad_word_used_by_user(selected_user,df):
+    english_bad_words = open('english.txt', 'r').read()
+    hindi_bad_words = open('hindi.txt', 'r').read()
+
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
+
+    temp = df[df['user'] != 'group_notification']
+    temp = temp[temp['message'] != '<Media omitted>\n']
+
+    words = []
+
+    for message in temp['message']:
+        for word in message.lower().split():
+            if word in english_bad_words:
+                if len(word)>=4:
+                   words.append(word)
+
+
+    for message in temp['message']:
+        for word in message.lower().split():
+            if word in hindi_bad_words:
+                if len(word) >= 4:
+                    words.append(word)
+
+    most_common_df = pd.DataFrame(Counter(words).most_common(20))
+    return most_common_df
